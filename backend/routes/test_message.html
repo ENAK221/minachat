@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 font-sans p-6">
+
+  <div class="max-w-lg mx-auto bg-white shadow-lg rounded-xl p-6">
+    <h2 class="text-2xl font-bold mb-4 text-gray-800">Messages</h2>
+
+    <!-- Zone d'affichage des messages -->
+    <div id="messages" class="border border-gray-300 bg-gray-50 p-4 rounded-lg h-80 overflow-y-auto space-y-2">
+      <em class="text-gray-400">Chargement des messages...</em>
+    </div>
+
+    <!-- Sélecteur d'utilisateur -->
+    <label class="block mt-4 text-gray-700 font-medium">Utilisateur :</label>
+    <select id="sender" class="mb-3 p-2 border rounded w-full bg-white">
+      <option value="1">Utilisateur 1</option>
+      <option value="2">Utilisateur 2</option>
+      <option value="3">Utilisateur 3</option>
+    </select>
+
+    <!-- Champ message -->
+    <label class="block text-gray-700 font-medium">Message :</label>
+    <input id="content" 
+          type="text" 
+          placeholder="Écris ton message ici..." 
+          class="w-full p-2 border rounded mb-3 shadow-sm focus:ring focus:ring-blue-200">
+
+    <!-- Bouton -->
+    <button onclick="sendMessage()" 
+            class="bg-blue-600 text-white px-4 py-2 rounded w-full shadow hover:bg-blue-700 transition">
+      Envoyer
+    </button>
+  </div>
+
+<script>
+function sendMessage() {
+  const sender_id = document.getElementById("sender").value;
+  const content = document.getElementById("content").value;
+
+  fetch("http://localhost:5000/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ sender_id, content })
+  })
+  .then(res => res.json())
+  .then(() => {
+    document.getElementById("content").value = "";
+    loadMessages();
+  });
+}
+
+function loadMessages() {
+  fetch("http://localhost:5000/messages")
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById("messages");
+      container.innerHTML = "";
+
+      data.forEach(msg => {
+        const div = document.createElement("div");
+
+        const isCurrentUser = msg.sender_id == document.getElementById("sender").value;
+
+        div.className = `
+          max-w-xs px-4 py-2 rounded-xl shadow 
+          ${isCurrentUser 
+            ? "bg-blue-500 text-white ml-auto" 
+            : "bg-gray-200 text-gray-800 mr-auto"}
+        `;
+
+        div.textContent = msg.content;
+        container.appendChild(div);
+      });
+
+      // Scroll automatique vers le bas
+      container.scrollTop = container.scrollHeight;
+    });
+}
+
+// 🔥 Rafraîchissement automatique toutes les 2 secondes
+setInterval(loadMessages, 10000);
+
+window.onload = loadMessages;
+</script>
+
+</body>
+</html>
