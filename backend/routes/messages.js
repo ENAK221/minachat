@@ -1,33 +1,52 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../src/db");
+const auth = require("../middleware/authMiddleware");
 
-// OBTENIR TOUS LES MESSAGES
-router.get("/", async (req, res) => {
-  try {
-    const result = await db.query("SELECT * FROM messages ORDER BY id DESC");
-    res.json(result.rows);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Erreur serveur" });
+// OBTENIR LA CONVERSATION ENTRE DEUX UTILISATEURS (protégée)
+// url exemple : /messages/conversation/3/7
+router.get(
+  "/conversation/:me/:other",
+  auth,
+  async (req, res) => {
+    const { me, other } = req.params;
+
+    // le token doit correspondre à l'utilisateur qui fait la requête
+    if (parseInt(me, 10) !== req.user.id) {
+      return res.status(403).json({ message: "Accès interdit" });
+    }
+
+    try {
+      const result = await db.query(
+        `SELECT * FROM messages
+         WHERE (sender_id=$1 AND receiver_id=$2)
+            OR (sender_id=$2 AND receiver_id=$1)
+         ORDER BY id ASC`,
+        [me, other]
+      );
+      res.json(result.rows);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Erreur serveur" });
+    }
   }
-});
+);
 
-// ENVOYER UN MESSAGE
-router.post("/", async (req, res) => {
-  const { sender_id, content } = req.body;
+// ENVOYER UN MESSAGE (importance : utilisateur connecté sera l'expéditeur)
+router.post("/", auth, async (req, res) => {
+  const { receiver_id, content } = req.body;
+  const sender_id = req.user.id; // récupéré depuis le token
 
   try {
     const newMessage = await db.query(
-      "INSERT INTO messages (sender_id, content) VALUES ($1, $2) RETURNING *",
-      [sender_id, content]
+      "INSERT INTO messages (sender_id, receiver_id, content) VALUES ($1, $2, $3) RETURNING *",
+      [sender_id, receiver_id, content]
     );
 
     res.status(201).json({
       message: "Message envoyé",
-      data: newMessage.rows[0]
+      data: newMessage.rows[0],
     });
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Erreur serveur" });

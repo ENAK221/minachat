@@ -15,8 +15,15 @@
     </div>
 
     <!-- Sélecteur d'utilisateur -->
-    <label class="block mt-4 text-gray-700 font-medium">Utilisateur :</label>
+    <label class="block mt-4 text-gray-700 font-medium">Expéditeur :</label>
     <select id="sender" class="mb-3 p-2 border rounded w-full bg-white">
+      <option value="1">Utilisateur 1</option>
+      <option value="2">Utilisateur 2</option>
+      <option value="3">Utilisateur 3</option>
+    </select>
+
+    <label class="block mt-2 text-gray-700 font-medium">Destinataire :</label>
+    <select id="receiver" class="mb-3 p-2 border rounded w-full bg-white">
       <option value="1">Utilisateur 1</option>
       <option value="2">Utilisateur 2</option>
       <option value="3">Utilisateur 3</option>
@@ -39,12 +46,17 @@
 <script>
 function sendMessage() {
   const sender_id = document.getElementById("sender").value;
+  const receiver_id = document.getElementById("receiver").value;
   const content = document.getElementById("content").value;
+  const token = localStorage.getItem("token");
 
   fetch("http://localhost:5000/messages", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ sender_id, content })
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token ? "Bearer " + token : undefined,
+    },
+    body: JSON.stringify({ receiver_id, content })
   })
   .then(res => res.json())
   .then(() => {
@@ -54,7 +66,13 @@ function sendMessage() {
 }
 
 function loadMessages() {
-  fetch("http://localhost:5000/messages")
+  const sender = document.getElementById("sender").value;
+  const receiver = document.getElementById("receiver").value;
+  const token = localStorage.getItem("token");
+
+  fetch(`http://localhost:5000/messages/conversation/${sender}/${receiver}`, {
+    headers: { Authorization: token ? "Bearer " + token : undefined },
+  })
     .then(res => res.json())
     .then(data => {
       const container = document.getElementById("messages");
@@ -63,7 +81,7 @@ function loadMessages() {
       data.forEach(msg => {
         const div = document.createElement("div");
 
-        const isCurrentUser = msg.sender_id == document.getElementById("sender").value;
+        const isCurrentUser = msg.sender_id == sender;
 
         div.className = `
           max-w-xs px-4 py-2 rounded-xl shadow 

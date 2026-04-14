@@ -6,9 +6,13 @@ const jwt = require("jsonwebtoken");
 
 // INSCRIPTION
 router.post("/register", async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, avatar_url, bio } = req.body;
 
   try {
+    // Vérifier présence des champs avatar et bio
+    if (!avatar_url || !bio) {
+      return res.status(400).json({ message: "Avatar et description requis" });
+    }
     // Vérifier si l'utilisateur existe déjà
     const userExists = await db.query(
       "SELECT id FROM users WHERE email = $1",
@@ -24,10 +28,10 @@ router.post("/register", async (req, res) => {
 
     // Insérer l'utilisateur
     const newUser = await db.query(
-      `INSERT INTO users (username, email, password, role, is_validated)
-       VALUES ($1, $2, $3, $4, $5)
-       RETURNING id, username, email, role, is_validated`,
-      [username, email, hashedPassword, "user", false]
+      `INSERT INTO users (username, email, password, role, is_validated, avatar_url, bio)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
+       RETURNING id, username, email, role, is_validated, avatar_url, bio`,
+      [username, email, hashedPassword, "user", false, req.body.avatar_url || null, req.body.bio || ""]
     );
 
     res.status(201).json({
@@ -77,7 +81,9 @@ router.post("/login", async (req, res) => {
         id: user.id,
         username: user.username,
         email: user.email,
-        role: user.role
+        role: user.role,
+        avatar_url: user.avatar_url,
+        bio: user.bio
       }
     });
 

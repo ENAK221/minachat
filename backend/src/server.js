@@ -1,7 +1,9 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+require("dotenv").config();
 
+// Middlewares
 app.use(cors());
 app.use(express.json());
 
@@ -9,12 +11,15 @@ app.use(express.json());
 const authRoutes = require("../routes/auth");
 const userRoutes = require("../routes/users");
 const messageRoutes = require("../routes/messages");
+const adminRoutes = require("../routes/admin");
 
 // Utilisation des routes
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/messages", messageRoutes);
+app.use("/admin", adminRoutes);
 
-app.listen(5000, () => {
-  console.log(`Serveur lancé sur le port 5000`);
+// Lancement du serveur
+app.listen(process.env.PORT || 5000, () => {
+  console.log(`Serveur lancé sur le port ${process.env.PORT || 5000}`);
 });
