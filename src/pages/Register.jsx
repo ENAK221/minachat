@@ -1,37 +1,7 @@
-import { useState } from "react";
-import axios from "axios";
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
 import { motion } from "framer-motion";
 
 export default function Register() {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleRegister = async (e) => {
-    e.preventDefault();
-
-    try {
-      const res = await axios.post("http://localhost:5000/auth/register", {
-        username,
-        email,
-        password,
-        avatar_url: "https://picsum.photos/200", // temporaire
-        bio: "Nouveau membre", // temporaire
-      });
-
-      alert(res.data.message);
-      console.log(res.data);
-
-    } catch (err) {
-      if (err.response) {
-        alert(err.response.data.message || err.response.data.error);
-      } else {
-        alert("Erreur réseau");
-      }
-    }
-  };
-
   return (
     <div className="relative flex justify-center items-center min-h-[80vh] overflow-hidden">
 
@@ -52,15 +22,13 @@ export default function Register() {
           Inscription
         </h1>
 
-        <form className="flex flex-col gap-5" onSubmit={handleRegister}>
+        <form className="flex flex-col gap-5">
           <div className="flex items-center bg-white/20 border border-white/40 p-3 rounded-xl text-white">
             <FaUser className="text-white/80 mr-3 text-xl" />
             <input
               type="text"
               placeholder="Nom d'utilisateur"
               className="bg-transparent w-full outline-none placeholder-white/70"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
             />
           </div>
 
@@ -70,8 +38,6 @@ export default function Register() {
               type="email"
               placeholder="Email"
               className="bg-transparent w-full outline-none placeholder-white/70"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
@@ -81,8 +47,6 @@ export default function Register() {
               type="password"
               placeholder="Mot de passe"
               className="bg-transparent w-full outline-none placeholder-white/70"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
