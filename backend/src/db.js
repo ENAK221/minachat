@@ -9,8 +9,13 @@ const pool = new Pool({
   port: process.env.DB_PORT,
 });
 
+// Test de connexion
 pool.connect()
-  .then(() => console.log(" Connecté à PostgreSQL"))
+  .then(() => console.log("Connecté à PostgreSQL"))
   .catch(err => console.error("Erreur de connexion PostgreSQL", err));
 
-module.exports = pool;
+// Export propre
+module.exports = {
+  query: (text, params) => pool.query(text, params),
+  pool
+};

@@ -8,10 +8,15 @@ app.use(cors());
 app.use(express.json());
 
 // Import des routes
-const authRoutes = require("../routes/auth");
-const userRoutes = require("../routes/users");
-const messageRoutes = require("../routes/messages");
-const adminRoutes = require("../routes/admin");
+const authRoutes = require("./routes/auth");
+const userRoutes = require("./routes/users");
+const messageRoutes = require("./routes/messages");
+const adminRoutes = require("./routes/admin");
+
+// Route de test
+app.get("/", (req, res) => {
+  res.json({ message: "Backend opérationnel" });
+});
 
 // Utilisation des routes
 app.use("/auth", authRoutes);

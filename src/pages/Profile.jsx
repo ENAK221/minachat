@@ -1,9 +1,7 @@
-import { motion } from "framer-motion";
-
 import { useState, useEffect, useContext } from "react";
+import { motion } from "framer-motion";
 import { UserContext } from "../context/UserContext";
 import { API_URL } from "../config";
-import { motion } from "framer-motion";
 
 export default function Profile() {
   const { user, setUser } = useContext(UserContext);

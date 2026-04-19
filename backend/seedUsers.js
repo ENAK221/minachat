@@ -3,22 +3,30 @@ const bcrypt = require("bcrypt");
 
 (async () => {
   try {
-    // ensure admin account exists with known credentials
+    console.log("Seeding users...");
+
+    // === SUPER ADMIN ===
     const adminEmail = "superadmin@gmail.com";
     const adminPass = "superadmin123";
     const adminHash = await bcrypt.hash(adminPass, 10);
-    const adminExists = await db.query("SELECT id FROM users WHERE email=$1", [adminEmail]);
+
+    const adminExists = await db.query(
+      "SELECT id FROM users WHERE email=$1",
+      [adminEmail]
+    );
+
     if (adminExists.rows.length === 0) {
       await db.query(
-        `INSERT INTO users (username,email,password,role,is_validated)
-         VALUES ($1,$2,$3,'admin',true)`,
-        ['super admin', adminEmail, adminHash]
+        `INSERT INTO users (username, email, password, role, is_validated)
+         VALUES ($1, $2, $3, 'admin', true)`,
+        ["super admin", adminEmail, adminHash]
       );
-      console.log('super admin created with email superadmin@gmail.com and password superadmin123');
+      console.log("✔ Super admin créé !");
     } else {
-      console.log('admin already exists');
+      console.log("ℹ Super admin existe déjà");
     }
 
+    // === AUTRES UTILISATEURS ===
     const users = [
       {
         username: "thier",
@@ -37,33 +45,36 @@ const bcrypt = require("bcrypt");
     ];
 
     for (let u of users) {
-      // check existence
-      const exists = await db.query("SELECT id FROM users WHERE email = $1", [
-        u.email,
-      ]);
+      const exists = await db.query(
+        "SELECT id FROM users WHERE email = $1",
+        [u.email]
+      );
+
       const hash = await bcrypt.hash(u.pwd, 10);
+
       if (exists.rows.length > 0) {
-        // update avatar and bio if user already exists
         await db.query(
           `UPDATE users
            SET avatar_url = $1, bio = $2
            WHERE email = $3`,
           [u.avatar, u.bio, u.email]
         );
-        console.log(`updated profile for ${u.email}`);
+        console.log(`✔ Profil mis à jour : ${u.email}`);
       } else {
         await db.query(
           `INSERT INTO users (username, email, password, role, is_validated, avatar_url, bio)
            VALUES ($1, $2, $3, 'user', true, $4, $5)`,
           [u.username, u.email, hash, u.avatar, u.bio]
         );
-        console.log(`created ${u.email}`);
+        console.log(`✔ Utilisateur créé : ${u.email}`);
       }
     }
+
+    console.log("🎉 Seeding terminé !");
   } catch (err) {
-    console.error(err);
+    console.error("❌ Erreur pendant le seeding :", err);
   } finally {
-    db.end();
+    await db.pool.end(); // fermeture propre du pool
     process.exit();
   }
 })();

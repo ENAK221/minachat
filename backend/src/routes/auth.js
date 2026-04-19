@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
-const db = require("../src/db");
+const db = require("../db");
 const jwt = require("jsonwebtoken");
 
 // INSCRIPTION

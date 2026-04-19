@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../src/db");
-const auth = require("../middleware/authMiddleware");
+const db = require("../db");
+const auth = require("../../middleware/authMiddleware");
 
 
 // Récupérer tous les utilisateurs (pour le chat) – route protégée
