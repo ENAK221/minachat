@@ -20,8 +20,16 @@ export default function Login() {
       });
 
       alert("Connexion réussie !");
+
+      // 🔥 Sauvegarde token + user
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      // 🔥 Mise à jour du contexte
       setUser(res.data.user);
-      navigate("/");
+
+      // 🔥 Redirection vers le chat
+      navigate("/chat");
 
     } catch (err) {
       if (err.response) {
@@ -107,4 +115,3 @@ export default function Login() {
     </div>
   );
 }
-      

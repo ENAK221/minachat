@@ -1,14 +1,37 @@
-import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
+import { useState } from "react";
+import axios from "axios";
 import { motion } from "framer-motion";
 
 export default function Register() {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await axios.post("http://localhost:5000/auth/register", {
+        username,
+        email,
+        password,
+      });
+
+      alert("Inscription réussie !");
+    } catch (err) {
+      if (err.response) {
+        alert(err.response.data.error || err.response.data.message);
+      } else {
+        alert("Erreur réseau");
+      }
+    }
+  };
+
   return (
     <div className="relative flex justify-center items-center min-h-[80vh] overflow-hidden">
 
-      {/* Background animé */}
       <div className="absolute inset-0 bg-gradient-to-br from-purple-700 via-pink-500 to-red-400 animate-[gradient_8s_ease_infinite]"></div>
 
-      {/* Particules lumineuses */}
       <div className="absolute w-72 h-72 bg-white/20 rounded-full blur-3xl top-10 left-10 animate-pulse"></div>
       <div className="absolute w-72 h-72 bg-pink-300/20 rounded-full blur-3xl bottom-10 right-10 animate-pulse"></div>
 
@@ -22,31 +45,34 @@ export default function Register() {
           Inscription
         </h1>
 
-        <form className="flex flex-col gap-5">
+        <form className="flex flex-col gap-5" onSubmit={handleRegister}>
           <div className="flex items-center bg-white/20 border border-white/40 p-3 rounded-xl text-white">
-            <FaUser className="text-white/80 mr-3 text-xl" />
             <input
               type="text"
               placeholder="Nom d'utilisateur"
               className="bg-transparent w-full outline-none placeholder-white/70"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </div>
 
           <div className="flex items-center bg-white/20 border border-white/40 p-3 rounded-xl text-white">
-            <FaEnvelope className="text-white/80 mr-3 text-xl" />
             <input
               type="email"
               placeholder="Email"
               className="bg-transparent w-full outline-none placeholder-white/70"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
           <div className="flex items-center bg-white/20 border border-white/40 p-3 rounded-xl text-white">
-            <FaLock className="text-white/80 mr-3 text-xl" />
             <input
               type="password"
               placeholder="Mot de passe"
               className="bg-transparent w-full outline-none placeholder-white/70"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 

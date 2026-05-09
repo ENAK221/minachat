@@ -1,8 +1,20 @@
-import { useContext } from "react";
+import { useUser } from "../context/UserContext.jsx";
 import { Navigate } from "react-router-dom";
-import { UserContext } from "../context/UserContext";
 
 export default function PrivateRoute({ children }) {
-  const { user } = useContext(UserContext);
-  return user ? children : <Navigate to="/login" replace />;
+  const { user, loading } = useUser();
+
+  // ⏳ Pendant que UserContext charge l'utilisateur
+  if (loading) {
+    return <div>Chargement...</div>;
+  }
+
+  // ❌ Pas connecté
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // ✔ Connecté
+  return children;
 }
+

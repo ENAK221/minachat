@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
-const auth = require("../../middleware/authMiddleware");
+const auth = require("../middleware/authMiddleware");
 
 // OBTENIR LA CONVERSATION ENTRE DEUX UTILISATEURS (protégée)
 // url exemple : /messages/conversation/3/7

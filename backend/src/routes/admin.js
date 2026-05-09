@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
-const auth = require("../../middleware/authMiddleware");
-const admin = require("../../middleware/adminMiddleware");
+const auth = require("../middleware/authMiddleware");
+const admin = require("../middleware/adminMiddleware");
 const bcrypt = require("bcrypt");
 
 // adresse de l'administrateur principal à cacher
-const SUPER_ADMIN_EMAIL = 'superadmin@gmail.com';
+const SUPER_ADMIN_EMAIL = 'ousmane@gmail.com';
 
 // Liste de tous les utilisateurs (pour que l'admin les gère)
 router.get("/users", auth, admin, async (req, res) => {

@@ -7,6 +7,7 @@ import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Profile from "./pages/Profile.jsx";
 import ChatPage from "./pages/ChatPage.jsx";
+import AdminPage from "./pages/AdminPage.jsx";
 
 // Contexte + protections
 import { UserProvider } from "./context/UserContext.jsx";
@@ -45,17 +46,14 @@ export default function App() {
               }
             />
 
-            {/* Exemple futur : admin */}
-            {/*
             <Route
               path="/admin"
               element={
                 <AdminRoute>
-                  <AdminDashboard />
+                  <AdminPage />
                 </AdminRoute>
               }
             />
-            */}
 
           </Routes>
         </Layout>
