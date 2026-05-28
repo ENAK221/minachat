@@ -1,99 +1,288 @@
 # Minachat
 
-Petit projet de messagerie en temps réel, développé dans le cadre d'un BTS SIO SLAM.
+Application de messagerie privée fullstack avec système de rôles et panneau d'administration.
 
-##  Technologies
+---
 
-- **Backend** : Node.js + Express
-- **Base de données** : PostgreSQL
-- **Authentification** : JWT + bcrypt
-- **Frontend** : React (via Vite) + Tailwind CSS
+## Apercu
 
-##  Fonctionnalités principales
+Minachat permet à des utilisateurs inscrits, et validés par un administrateur, de s'envoyer des messages privés. Elle inclut un panneau d'administration complet pour gérer les comptes, valider les inscriptions et modérer les utilisateurs.
 
-1. Inscription / connexion avec validation par admin
-2. **Gestion des rôles (`user` / `admin`)** – les administrateurs ont un
-   tableau de bord dédié
-3. Profils enrichis : photo de profil (URL) et description personnelle
-4. Panneau d'administration :
-   - affichage des inscriptions en attente
-   - validation/bannissement/suppression des comptes
-   - création d'utilisateurs (rôle, avatar, bio)
-   - **avertissement** des utilisateurs (compteur de warnings, stocké en base)
-   - outils de filtrage et organisation
-5. Chat privé entre utilisateurs (rafraîchi toutes les 2 secondes)
-6. Interface responsive, design moderne avec animations
-7. Script de peuplement (`seedUsers.js`)
+---
 
-##  Installation
+## Stack technique
 
-1. **Cloner le dépôt et installer les dépendances**
-   ```bash
-   git clone <repo-url>
-   cd minachat/backend
-   npm install
-   cd ../frontend
-   npm install
-   ```
+| Couche          | Technologie                                      |
+|-----------------|--------------------------------------------------|
+| Frontend        | React 19, Vite 7, Tailwind CSS 4, Framer Motion |
+| Backend         | Node.js, Express 5                               |
+| Base de données | PostgreSQL (Neon)                                |
+| Auth            | JWT (jsonwebtoken) + bcrypt                      |
+| Temps réel      | Socket.IO 4                                      |
 
-2. **Préparer la base de données**
-   Exécuter les commandes SQL suivantes (psql, pgAdmin, ...):
+---
 
-   -- pour créer un administrateur manuellement :
-   -- générer un hash bcrypt (cf. script dans le projet ou `node -e "…"`)
-   -- puis insérer :
-   -- INSERT INTO users (username,email,password,role,is_validated) VALUES
-   -- ('super admin','superadmin@gmail.com','<hash>','admin',true);
-   ```sql
-3. **Configurer les variables d'environnement**
-   Créer `backend/.env` :
-   ```dotenv
-   DB_HOST=localhost
-   DB_USER=<username>
-   DB_PASSWORD=<password>
-   DB_NAME=<database>
-   DB_PORT=5432
-   JWT_SECRET=<secret>
-   PORT=5000
-   ```
+## Fonctionnalites
 
-4. **Lancer les serveurs**
-   ```bash
-   # backend
-   cd backend && npm start
+### Utilisateur
+- Inscription avec avatar (URL) et biographie — en attente de validation admin
+- Connexion sécurisée par JWT (durée 7 jours)
+- Messagerie privée entre utilisateurs (rafraîchissement toutes les 2 secondes)
+- Modification du profil (avatar, bio, username)
+- Interface responsive avec animations (Framer Motion)
 
-   # frontend
-   cd frontend && npm run dev
-   ```
+### Administration
+- Tableau de bord listant tous les comptes utilisateurs
+- Validation ou blocage d'un compte (`is_validated`)
+- Avertissement d'un utilisateur (compteur `warning_count` en base)
+- Suppression d'un compte
+- Création manuelle d'un compte (utilisateur ou admin)
+- Protection du super-admin (aucune action possible sur ce compte)
 
-5. **(Optionnel) Peupler des comptes de test**
-   ```bash
-   cd backend && node seedUsers.js
-   ```
-   Cela crée `thier@gmail.com` / `thier123` et `cheikh@gmail.com` / `cheikh123`.
-7. **Accéder au tableau de bord admin**
-   - Se connecter avec un compte ayant `role='admin'`.
-   - Cliquer sur le lien **Admin** dans la barre de navigation ou
-     accéder à `/admin`.
-   - Utiliser les boutons de filtrage pour voir uniquement les nouvelles
-     inscriptions ou tous les utilisateurs.
-   - Valider, bloquer ou supprimer chaque compte, et en créer de nouveaux
-     directement depuis le formulaire situé en haut.
-6. Ouvrir le navigateur sur `http://localhost:3000` (ou port affiché par Vite).
+---
 
-##  Organisation du projet
+## Structure du projet
 
-- `backend/` : code serveur, routes, middleware
-- `frontend/` : application React
-- `backend/seedUsers.js` : script d'ajout d'utilisateurs de test
+```
+minachat/
+├── backend/                         # API REST (Node.js / Express)
+│   ├── src/
+│   │   ├── controllers/
+│   │   │   └── auth.controllers.js
+│   │   ├── middleware/
+│   │   │   ├── authMiddleware.js    # Vérification JWT
+│   │   │   └── adminMiddleware.js   # Vérification rôle admin
+│   │   ├── routes/
+│   │   │   ├── auth.js             # POST /auth/register, /auth/login
+│   │   │   ├── users.js            # GET /users, /users/me — PATCH /users/:id
+│   │   │   ├── messages.js         # GET /messages/conversation — POST /messages
+│   │   │   └── admin.js            # CRUD + modération /admin/users
+│   │   ├── db.js                   # Pool de connexion PostgreSQL (pg)
+│   │   └── server.js               # Point d'entrée Express
+│   ├── schema.sql                   # Schéma SQL initial
+│   ├── seedUsers.js                 # Peuplement de comptes de test
+│   ├── createAdmin.js               # Création d'un compte admin
+│   └── package.json
+│
+├── src/                             # Frontend React
+│   ├── components/
+│   │   ├── Navbar.jsx
+│   │   ├── Layout.jsx
+│   │   ├── PrivateRoute.jsx         # Redirige vers /login si non connecté
+│   │   └── AdminRoute.jsx           # Redirige si rôle != admin
+│   ├── context/
+│   │   └── UserContext.jsx          # Contexte utilisateur global
+│   ├── pages/
+│   │   ├── Home.jsx
+│   │   ├── Login.jsx
+│   │   ├── Register.jsx
+│   │   ├── ChatPage.jsx             # Messagerie privée
+│   │   ├── Profile.jsx              # Édition du profil
+│   │   └── AdminPage.jsx            # Panneau d'administration
+│   ├── services/
+│   ├── config.js                    # URL de l'API via VITE_API_URL
+│   └── main.jsx
+│
+├── index.html
+├── vite.config.js
+└── package.json
+```
 
+---
 
-##  Améliorations possibles
-- Mot de passe oublié / profil utilisateur / 2FA
-- Chat de groupe, envoi de fichiers, réactions
--  déploiement Docker
+## Base de donnees
 
-## Capture d'ecrans 
+```sql
+-- Utilisateurs
+CREATE TABLE IF NOT EXISTS users (
+  id            SERIAL PRIMARY KEY,
+  username      TEXT,
+  email         TEXT UNIQUE NOT NULL,
+  password      TEXT NOT NULL,
+  role          TEXT NOT NULL DEFAULT 'user',      -- 'user' | 'admin'
+  is_validated  BOOLEAN NOT NULL DEFAULT FALSE,
+  warning_count INTEGER NOT NULL DEFAULT 0,
+  avatar_url    TEXT,
+  bio           TEXT,
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
 
+-- Messages privés
+CREATE TABLE IF NOT EXISTS messages (
+  id          SERIAL PRIMARY KEY,
+  sender_id   INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  receiver_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  content     TEXT NOT NULL,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+```
 
+---
 
+## API — Endpoints
+
+### Authentification — `/auth`
+
+| Méthode | Route            | Description                              | Auth |
+|---------|------------------|------------------------------------------|------|
+| POST    | `/auth/register` | Inscription (en attente de validation)   | Non  |
+| POST    | `/auth/login`    | Connexion — retourne un token JWT        | Non  |
+
+### Utilisateurs — `/users`
+
+| Méthode | Route        | Description                                        | Auth |
+|---------|--------------|----------------------------------------------------|------|
+| GET     | `/users`     | Liste tous les utilisateurs (id, username, avatar) | JWT  |
+| GET     | `/users/me`  | Profil complet de l'utilisateur connecté           | JWT  |
+| PATCH   | `/users/:id` | Modifier son profil (avatar, bio, username)        | JWT  |
+
+### Messages — `/messages`
+
+| Méthode | Route                               | Description                        | Auth |
+|---------|-------------------------------------|------------------------------------|------|
+| GET     | `/messages/conversation/:me/:other` | Historique entre deux utilisateurs | JWT  |
+| POST    | `/messages`                         | Envoyer un message                 | JWT  |
+
+### Administration — `/admin` (rôle `admin` requis)
+
+| Méthode | Route                       | Description                    |
+|---------|-----------------------------|--------------------------------|
+| GET     | `/admin/users`              | Liste tous les utilisateurs    |
+| POST    | `/admin/users`              | Créer un utilisateur           |
+| PATCH   | `/admin/users/:id/validate` | Valider ou bloquer un compte   |
+| POST    | `/admin/users/:id/warn`     | Avertir un utilisateur         |
+| DELETE  | `/admin/users/:id`          | Supprimer un utilisateur       |
+
+---
+
+## Installation locale
+
+### Prérequis
+
+- Node.js 18+
+- Une base de données PostgreSQL (locale ou [Neon](https://neon.tech))
+
+### 1. Cloner le dépôt
+
+```bash
+git clone <url-du-repo>
+cd minachat
+```
+
+### 2. Configurer le backend
+
+Créer `backend/.env` :
+
+```env
+DATABASE_URL=postgresql://user:password@host/dbname?sslmode=require
+JWT_SECRET=une_cle_secrete_longue_et_aleatoire
+PORT=5000
+```
+
+Initialiser la base de données :
+
+```bash
+psql $DATABASE_URL -f backend/schema.sql
+```
+
+Installer et démarrer :
+
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+### 3. Configurer le frontend
+
+Depuis la racine du projet :
+
+```bash
+npm install
+```
+
+Créer `.env` à la racine :
+
+```env
+VITE_API_URL=http://localhost:5000
+```
+
+Démarrer :
+
+```bash
+npm run dev
+```
+
+### 4. (Optionnel) Créer un admin et peupler des comptes de test
+
+```bash
+cd backend
+node createAdmin.js   # Crée le premier compte administrateur
+node seedUsers.js     # Ajoute des comptes de test
+```
+
+---
+
+## Acces en local
+
+| Service    | URL                    |
+|------------|------------------------|
+| Frontend   | http://localhost:5173  |
+| Backend    | http://localhost:5000  |
+| API health | http://localhost:5000/ |
+
+### Comptes de test (après `node seedUsers.js`)
+
+| Email            | Mot de passe | Rôle |
+|------------------|--------------|------|
+| thier@gmail.com  | thier123     | user |
+| cheikh@gmail.com | cheikh123    | user |
+
+> Le premier compte admin doit être créé via `node createAdmin.js` ou directement en base.
+
+---
+
+## Scripts disponibles
+
+### Backend (`backend/`)
+
+| Commande                | Action                        |
+|-------------------------|-------------------------------|
+| `npm run dev`           | Démarrage avec nodemon        |
+| `npm start`             | Démarrage en production       |
+| `npm test`              | Tests Jest                    |
+| `npm run test:watch`    | Tests en mode watch           |
+| `npm run test:coverage` | Rapport de couverture         |
+
+### Frontend (racine)
+
+| Commande          | Action                     |
+|-------------------|----------------------------|
+| `npm run dev`     | Serveur de développement   |
+| `npm run build`   | Build de production        |
+| `npm run preview` | Prévisualisation du build  |
+| `npm run lint`    | Vérification ESLint        |
+
+---
+
+## Securite
+
+- Mots de passe hashés avec **bcrypt** (salt rounds : 10)
+- Authentification par token **JWT** via l'en-tête `Authorization: Bearer <token>`
+- Rôle `admin` vérifié côté serveur sur chaque route d'administration
+- Le super-admin est protégé contre toute modification ou suppression
+
+---
+
+## Ameliorations possibles
+
+- Remplacement du polling par une connexion Socket.IO persistante pour le temps réel
+- Mot de passe oublié / réinitialisation par email
+- Chat de groupe, envoi de fichiers, réactions aux messages
+- Déploiement conteneurisé (Docker)
+
+---
+
+## Auteur
+
+**Ousmane Kane** — kane.ousmane2@ugb.edu.sn
