@@ -2,14 +2,14 @@
 
 Petit projet de messagerie en temps réel, développé dans le cadre d'un BTS SIO SLAM.
 
-## 📦 Technologies
+##  Technologies
 
 - **Backend** : Node.js + Express
 - **Base de données** : PostgreSQL
 - **Authentification** : JWT + bcrypt
 - **Frontend** : React (via Vite) + Tailwind CSS
 
-## ✅ Fonctionnalités principales
+##  Fonctionnalités principales
 
 1. Inscription / connexion avec validation par admin
 2. **Gestion des rôles (`user` / `admin`)** – les administrateurs ont un
@@ -25,7 +25,7 @@ Petit projet de messagerie en temps réel, développé dans le cadre d'un BTS SI
 6. Interface responsive, design moderne avec animations
 7. Script de peuplement (`seedUsers.js`)
 
-## 🚀 Installation
+##  Installation
 
 1. **Cloner le dépôt et installer les dépendances**
    ```bash
@@ -45,34 +45,6 @@ Petit projet de messagerie en temps réel, développé dans le cadre d'un BTS SI
    -- INSERT INTO users (username,email,password,role,is_validated) VALUES
    -- ('super admin','superadmin@gmail.com','<hash>','admin',true);
    ```sql
-   -- table utilisateurs
-   CREATE TABLE users (
-       id SERIAL PRIMARY KEY,
-       username TEXT NOT NULL,
-       email TEXT NOT NULL UNIQUE,
-       password TEXT NOT NULL,
-       role TEXT NOT NULL DEFAULT 'user',
-       is_validated BOOLEAN NOT NULL DEFAULT FALSE,
-       avatar_url TEXT,
-       bio TEXT DEFAULT '',
-       warning_count INTEGER NOT NULL DEFAULT 0,
-       created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
-   );
-
-   -- table messages
-   CREATE TABLE messages (
-       id SERIAL PRIMARY KEY,
-       sender_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-       receiver_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-       content TEXT NOT NULL,
-       created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
-   );
-   -- si la table users existe déjà, ajouter les nouvelles colonnes :
-   ALTER TABLE users
-       ADD COLUMN IF NOT EXISTS avatar_url TEXT,
-       ADD COLUMN IF NOT EXISTS bio TEXT DEFAULT '',
-       ADD COLUMN IF NOT EXISTS warning_count INTEGER NOT NULL DEFAULT 0;   ```
-
 3. **Configurer les variables d'environnement**
    Créer `backend/.env` :
    ```dotenv
@@ -109,16 +81,19 @@ Petit projet de messagerie en temps réel, développé dans le cadre d'un BTS SI
      directement depuis le formulaire situé en haut.
 6. Ouvrir le navigateur sur `http://localhost:3000` (ou port affiché par Vite).
 
-## 📁 Organisation du projet
+##  Organisation du projet
 
 - `backend/` : code serveur, routes, middleware
 - `frontend/` : application React
 - `backend/seedUsers.js` : script d'ajout d'utilisateurs de test
 
-## 💡 Améliorations possibles
-- Passage à WebSocket pour un chat en temps réel
+
+##  Améliorations possibles
 - Mot de passe oublié / profil utilisateur / 2FA
 - Chat de groupe, envoi de fichiers, réactions
-- Tests unitaires / E2E, CI/CD, déploiement Docker
+-  déploiement Docker
 
-Le projet est volontairement simple mais structuré, idéal pour un dossier ou une démonstration orale. N'hésitez pas à explorer le code et à le personnaliser !
+## Capture d'ecrans 
+
+
+
