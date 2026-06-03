@@ -53,8 +53,8 @@ export default function CreateGroup() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(79,70,229,0.45),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(14,165,233,0.3),_transparent_30%),linear-gradient(180deg,_#0f172a_0%,_#020617_100%)]" />
+    <div className="relative min-h-screen overflow-hidden bg-blue-900 text-slate-100">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(79,70,229,0.45),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(14,165,233,0.3),_transparent_30%),linear-gradient(180deg,_#1e3a8a_0%,_#1e40af_100%)]" />
 
       <div className="relative z-10 mx-auto max-w-md px-4 py-10">
 
@@ -101,7 +101,7 @@ export default function CreateGroup() {
                 </span>
               </label>
 
-              <div className="rounded-2xl border border-white/10 divide-y divide-white/10 max-h-64 overflow-y-auto bg-slate-950/60">
+              <div className="rounded-2xl border border-white/10 divide-y divide-white/10 max-h-64 overflow-y-auto bg-blue-900/60">
                 {users.map((user) => {
                   const selected = selectedIds.includes(user.id);
                   return (

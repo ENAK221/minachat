@@ -72,8 +72,8 @@ export default function GroupChat() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(79,70,229,0.45),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(14,165,233,0.3),_transparent_30%),linear-gradient(180deg,_#0f172a_0%,_#020617_100%)]" />
+    <div className="relative min-h-screen overflow-hidden bg-blue-900 text-slate-100">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(79,70,229,0.45),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(14,165,233,0.3),_transparent_30%),linear-gradient(180deg,_#1e3a8a_0%,_#1e40af_100%)]" />
 
       <div className="relative z-10 mx-auto flex h-screen max-w-[1400px] flex-col px-4 py-8">
 
@@ -94,7 +94,7 @@ export default function GroupChat() {
               <p className="text-sm uppercase tracking-[0.3em] text-cyan-300/80">Groupe</p>
               <h2 className="text-2xl font-semibold text-white">{groupName || "..."}</h2>
             </div>
-            <div className="ml-auto rounded-3xl bg-slate-900/80 px-4 py-2 text-sm text-slate-400">
+            <div className="ml-auto rounded-3xl bg-blue-800/80 px-4 py-2 text-sm text-slate-400">
               {members.length} membre{members.length > 1 ? "s" : ""}
             </div>
           </div>
@@ -107,13 +107,13 @@ export default function GroupChat() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="flex flex-1 flex-col overflow-hidden rounded-3xl border border-white/10 bg-slate-950/80 backdrop-blur-xl shadow-xl"
+            className="flex flex-1 flex-col overflow-hidden rounded-3xl border border-white/10 bg-blue-900/80 backdrop-blur-xl shadow-xl"
           >
             {/* Messages */}
             <div className="flex-1 overflow-y-auto px-6 py-6 space-y-4">
               {messages.length === 0 && (
                 <div className="flex h-full items-center justify-center">
-                  <div className="rounded-3xl border border-dashed border-white/15 bg-slate-950/70 p-10 text-center text-slate-400">
+                  <div className="rounded-3xl border border-dashed border-white/15 bg-blue-900/70 p-10 text-center text-slate-400">
                     <p className="text-lg font-semibold text-white">Aucun message pour l'instant</p>
                     <p className="mt-2 text-sm">Soyez le premier à écrire !</p>
                   </div>
@@ -162,7 +162,7 @@ export default function GroupChat() {
             </div>
 
             {/* Zone de saisie */}
-            <div className="border-t border-white/10 bg-slate-900/80 px-6 py-5">
+            <div className="border-t border-white/10 bg-blue-800/80 px-6 py-5">
               <div className="flex gap-3 items-center">
                 <input
                   type="text"
@@ -170,7 +170,7 @@ export default function GroupChat() {
                   onChange={(e) => setText(e.target.value)}
                   onKeyDown={handleKey}
                   placeholder="Tape ton message..."
-                  className="flex-1 rounded-3xl border border-white/10 bg-slate-950/80 px-5 py-4 text-slate-100 outline-none placeholder:text-slate-500 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-500/20"
+                  className="flex-1 rounded-3xl border border-white/20 bg-slate-600/60 px-5 py-4 text-white outline-none placeholder:text-slate-300 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-500/20"
                 />
                 <button
                   onClick={sendMessage}
@@ -188,7 +188,7 @@ export default function GroupChat() {
             initial={{ x: 30, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.15 }}
-            className="w-56 hidden md:flex flex-col rounded-3xl border border-white/10 bg-slate-900/80 backdrop-blur-xl shadow-xl overflow-hidden"
+            className="w-56 hidden md:flex flex-col rounded-3xl border border-white/10 bg-blue-800/80 backdrop-blur-xl shadow-xl overflow-hidden"
           >
             <div className="px-5 py-4 border-b border-white/10">
               <p className="text-sm uppercase tracking-[0.3em] text-cyan-300/80">Membres</p>

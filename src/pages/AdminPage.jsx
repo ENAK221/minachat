@@ -152,7 +152,7 @@ export default function AdminPage() {
               <h1 className="mt-3 text-4xl font-semibold text-white">Gestion des utilisateurs</h1>
               <p className="mt-2 max-w-2xl text-slate-300">Liste des comptes et actions rapides pour valider, avertir ou supprimer, avec un style cohérent à l'application.</p>
             </div>
-            <div className="rounded-3xl bg-slate-900/80 px-5 py-4 text-lg font-semibold text-cyan-300 shadow-lg shadow-cyan-500/10">
+            <div className="rounded-3xl bg-blue-800/80 px-5 py-4 text-lg font-semibold text-cyan-300 shadow-lg shadow-cyan-500/10">
               {users.length} utilisateur{users.length > 1 ? "s" : ""}
             </div>
           </div>
@@ -163,7 +163,7 @@ export default function AdminPage() {
             </div>
           )}
 
-          <div className="mt-8 rounded-[30px] border border-cyan-500/10 bg-slate-950/90 p-6 shadow-lg shadow-cyan-500/10">
+          <div className="mt-8 rounded-[30px] border border-cyan-500/10 bg-blue-900/90 p-6 shadow-lg shadow-cyan-500/10">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h2 className="text-xl font-semibold text-white">Inscriptions en attente</h2>
@@ -175,13 +175,13 @@ export default function AdminPage() {
             </div>
 
             {pendingUsers.length === 0 ? (
-              <div className="mt-6 rounded-3xl border border-slate-800 bg-slate-900/80 p-6 text-slate-400">
+              <div className="mt-6 rounded-3xl border border-slate-800 bg-blue-800/80 p-6 text-slate-400">
                 Aucun utilisateur en attente.
               </div>
             ) : (
               <div className="mt-6 grid gap-4">
                 {pendingUsers.map((user) => (
-                  <div key={user.id} className="rounded-3xl border border-slate-800 bg-slate-900/90 p-4 shadow-inner shadow-slate-950/20">
+                  <div key={user.id} className="rounded-3xl border border-slate-800 bg-blue-800/90 p-4 shadow-inner shadow-slate-950/20">
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                       <div>
                         <p className="text-sm uppercase tracking-[0.2em] text-slate-400">Nouvelle inscription</p>
@@ -209,9 +209,9 @@ export default function AdminPage() {
             )}
           </div>
 
-          <div className="mt-8 overflow-x-auto rounded-3xl border border-slate-800 bg-slate-950 shadow-inner shadow-slate-950/20">
+          <div className="mt-8 overflow-x-auto rounded-3xl border border-slate-800 bg-blue-900 shadow-inner shadow-slate-950/20">
             <table className="min-w-full divide-y divide-slate-800 text-left text-sm">
-              <thead className="bg-slate-900/95 text-slate-200">
+              <thead className="bg-blue-800/95 text-slate-200">
                 <tr>
                   <th className="px-4 py-3 font-medium uppercase tracking-[0.12em] text-slate-400">Utilisateur</th>
                   <th className="px-4 py-3 font-medium uppercase tracking-[0.12em] text-slate-400">Email</th>
@@ -222,7 +222,7 @@ export default function AdminPage() {
                   <th className="px-4 py-3 font-medium uppercase tracking-[0.12em] text-slate-400">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800 bg-slate-950 text-slate-200">
+              <tbody className="divide-y divide-slate-800 bg-blue-900 text-slate-200">
                 {loading ? (
                   <tr>
                     <td colSpan={7} className="px-4 py-10 text-center text-slate-500">
@@ -237,7 +237,7 @@ export default function AdminPage() {
                   </tr>
                 ) : (
                   users.map((user) => (
-                    <tr key={user.id} className="hover:bg-slate-900/80">
+                    <tr key={user.id} className="hover:bg-blue-800/80">
                       <td className="px-4 py-4 font-medium text-white">{user.username}</td>
                       <td className="px-4 py-4 text-slate-300">{user.email}</td>
                       <td className="px-4 py-4 text-slate-300 capitalize">{user.role}</td>
@@ -278,7 +278,7 @@ export default function AdminPage() {
           </div>
         </div>
 
-        <div className="rounded-[34px] border border-white/10 bg-slate-950/80 p-8 shadow-2xl shadow-slate-950/40 backdrop-blur-xl">
+        <div className="rounded-[34px] border border-white/10 bg-blue-900/80 p-8 shadow-2xl shadow-slate-950/40 backdrop-blur-xl">
           <div className="mb-6">
             <h2 className="text-2xl font-semibold text-white">Créer un nouvel utilisateur</h2>
             <p className="mt-2 text-slate-400">Ajoute un compte utilisateur directement depuis le panneau admin.</p>
@@ -290,7 +290,7 @@ export default function AdminPage() {
               <input
                 value={form.username}
                 onChange={(e) => setForm({ ...form, username: e.target.value })}
-                className="mt-2 w-full rounded-3xl border border-slate-700 bg-slate-900/90 px-4 py-3 text-slate-100 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20"
+                className="mt-2 w-full rounded-3xl border border-slate-700 bg-blue-800/90 px-4 py-3 text-slate-100 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20"
                 required
               />
             </label>
@@ -301,7 +301,7 @@ export default function AdminPage() {
                 type="email"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="mt-2 w-full rounded-3xl border border-slate-700 bg-slate-900/90 px-4 py-3 text-slate-100 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20"
+                className="mt-2 w-full rounded-3xl border border-slate-700 bg-blue-800/90 px-4 py-3 text-slate-100 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20"
                 required
               />
             </label>
@@ -312,7 +312,7 @@ export default function AdminPage() {
                 type="password"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
-                className="mt-2 w-full rounded-3xl border border-slate-700 bg-slate-900/90 px-4 py-3 text-slate-100 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20"
+                className="mt-2 w-full rounded-3xl border border-slate-700 bg-blue-800/90 px-4 py-3 text-slate-100 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20"
                 required
               />
             </label>
@@ -322,19 +322,19 @@ export default function AdminPage() {
               <select
                 value={form.role}
                 onChange={(e) => setForm({ ...form, role: e.target.value })}
-                className="mt-2 w-full rounded-3xl border border-slate-700 bg-slate-900/90 px-4 py-3 text-slate-100 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20"
+                className="mt-2 w-full rounded-3xl border border-slate-700 bg-blue-800/90 px-4 py-3 text-slate-100 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20"
               >
                 <option value="user">Utilisateur</option>
                 <option value="admin">Administrateur</option>
               </select>
             </label>
 
-            <label className="flex items-center gap-3 rounded-3xl border border-slate-700 bg-slate-900/90 px-4 py-3 text-slate-200">
+            <label className="flex items-center gap-3 rounded-3xl border border-slate-700 bg-blue-800/90 px-4 py-3 text-slate-200">
               <input
                 type="checkbox"
                 checked={form.validated}
                 onChange={(e) => setForm({ ...form, validated: e.target.checked })}
-                className="h-4 w-4 rounded border-slate-500 bg-slate-900 text-cyan-500 focus:ring-cyan-500"
+                className="h-4 w-4 rounded border-slate-500 bg-blue-800 text-cyan-500 focus:ring-cyan-500"
               />
               <span className="text-sm">Compte validé immédiatement</span>
             </label>

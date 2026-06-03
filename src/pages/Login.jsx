@@ -41,7 +41,7 @@ export default function Login() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0A0A0A]">
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-blue-900">
 
       {/* Halo lumineux */}
       <div className="absolute w-[600px] h-[600px] bg-blue-500/20 blur-[180px] rounded-full top-[-100px] left-[-100px]" />

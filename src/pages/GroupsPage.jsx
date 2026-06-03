@@ -21,8 +21,8 @@ export default function GroupsPage() {
   }, [token]);
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(79,70,229,0.45),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(14,165,233,0.3),_transparent_30%),linear-gradient(180deg,_#0f172a_0%,_#020617_100%)]" />
+    <div className="relative min-h-screen overflow-hidden bg-blue-900 text-slate-100">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(79,70,229,0.45),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(14,165,233,0.3),_transparent_30%),linear-gradient(180deg,_#1e3a8a_0%,_#1e40af_100%)]" />
 
       <div className="relative z-10 mx-auto max-w-2xl px-4 py-10">
 
@@ -60,7 +60,7 @@ export default function GroupsPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-3xl border border-dashed border-white/15 bg-slate-950/70 p-12 text-center text-slate-400"
+            className="rounded-3xl border border-dashed border-white/15 bg-blue-900/70 p-12 text-center text-slate-400"
           >
             <p className="text-lg font-semibold text-white">Aucun groupe pour l'instant</p>
             <p className="mt-2 text-sm">Crée ton premier groupe et invite des membres</p>
@@ -84,7 +84,7 @@ export default function GroupsPage() {
             >
               <Link
                 to={`/groups/${group.id}`}
-                className="flex items-center gap-4 rounded-3xl border border-white/10 bg-slate-900/80 px-5 py-4 shadow-xl backdrop-blur-xl transition hover:border-cyan-400/40 hover:bg-cyan-400/10"
+                className="flex items-center gap-4 rounded-3xl border border-white/10 bg-blue-800/80 px-5 py-4 shadow-xl backdrop-blur-xl transition hover:border-cyan-400/40 hover:bg-cyan-400/10"
               >
                 {/* Avatar */}
                 <div className="h-12 w-12 rounded-2xl bg-slate-800/90 ring-1 ring-white/10 flex items-center justify-center text-xl font-bold text-cyan-300">

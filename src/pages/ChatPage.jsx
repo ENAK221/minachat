@@ -79,8 +79,8 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(79,70,229,0.45),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(14,165,233,0.3),_transparent_30%),linear-gradient(180deg,_#0f172a_0%,_#020617_100%)]" />
+    <div className="relative min-h-screen overflow-hidden bg-blue-900 text-slate-100">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(79,70,229,0.45),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(14,165,233,0.3),_transparent_30%),linear-gradient(180deg,_#1e3a8a_0%,_#1e40af_100%)]" />
 
       <div className="relative z-10 mx-auto flex min-h-screen max-w-[1600px] flex-col px-4 py-8 sm:px-6 lg:px-8">
         <motion.div
@@ -96,7 +96,7 @@ export default function ChatPage() {
                 Messagerie instantanée
               </h1>
             </div>
-            <div className="rounded-3xl bg-slate-900/80 px-5 py-4 shadow-xl shadow-cyan-500/10">
+            <div className="rounded-3xl bg-blue-800/80 px-5 py-4 shadow-xl shadow-cyan-500/10">
               <p className="text-sm text-slate-400">Connecté en tant que</p>
               <p className="mt-1 font-semibold text-white">{user?.username || "Utilisateur"}</p>
             </div>
@@ -108,7 +108,7 @@ export default function ChatPage() {
             initial={{ x: -30, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="rounded-3xl border border-white/10 bg-slate-900/80 p-5 shadow-xl shadow-slate-950/40 backdrop-blur-xl"
+            className="rounded-3xl border border-white/10 bg-blue-800/80 p-5 shadow-xl shadow-slate-950/40 backdrop-blur-xl"
           >
             <div className="mb-6 flex items-center justify-between">
               <div>
@@ -121,7 +121,7 @@ export default function ChatPage() {
 
             <div className="space-y-3">
               {users.length === 0 ? (
-                <div className="rounded-3xl border border-dashed border-white/15 bg-slate-950/70 p-6 text-slate-400">
+                <div className="rounded-3xl border border-dashed border-white/15 bg-blue-900/70 p-6 text-slate-400">
                   Aucun utilisateur n'a encore été chargé.
                 </div>
               ) : (
@@ -132,7 +132,7 @@ export default function ChatPage() {
                     className={`w-full rounded-3xl border px-4 py-4 text-left transition-all duration-200 ${
                       selectedUser?.id === u.id
                         ? "border-cyan-400/40 bg-cyan-400/10 shadow-glow"
-                        : "border-white/10 bg-slate-950/70 hover:border-white/20 hover:bg-white/5"
+                        : "border-white/10 bg-blue-900/70 hover:border-white/20 hover:bg-white/5"
                     }`}
                   >
                     <div className="flex items-center gap-4">
@@ -152,7 +152,7 @@ export default function ChatPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.15 }}
-            className="flex min-h-[calc(100vh-192px)] flex-col overflow-hidden rounded-3xl border border-white/10 bg-slate-950/80 shadow-xl shadow-slate-950/40 backdrop-blur-xl"
+            className="flex min-h-[calc(100vh-192px)] flex-col overflow-hidden rounded-3xl border border-white/10 bg-blue-900/80 shadow-xl shadow-slate-950/40 backdrop-blur-xl"
           >
             <div className="border-b border-white/10 px-6 py-5">
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -165,7 +165,7 @@ export default function ChatPage() {
                   </h2>
                 </div>
                 {selectedUser && (
-                  <div className="rounded-3xl bg-slate-900/80 px-4 py-3 text-sm text-slate-300">
+                  <div className="rounded-3xl bg-blue-800/80 px-4 py-3 text-sm text-slate-300">
                     En discussion avec {selectedUser.username}
                   </div>
                 )}
@@ -176,7 +176,7 @@ export default function ChatPage() {
               {selectedUser ? (
                 <div className="space-y-4">
                   {messages.length === 0 ? (
-                    <div className="rounded-3xl border border-dashed border-white/15 bg-slate-950/70 p-8 text-center text-slate-400">
+                    <div className="rounded-3xl border border-dashed border-white/15 bg-blue-900/70 p-8 text-center text-slate-400">
                       Aucune conversation pour le moment. Envoie le premier message !
                     </div>
                   ) : (
@@ -199,7 +199,7 @@ export default function ChatPage() {
                   )}
                 </div>
               ) : (
-                <div className="flex h-full items-center justify-center rounded-3xl border border-dashed border-white/10 bg-slate-950/70 p-10 text-center text-slate-400">
+                <div className="flex h-full items-center justify-center rounded-3xl border border-dashed border-white/10 bg-blue-900/70 p-10 text-center text-slate-400">
                   <div>
                     <p className="text-lg font-semibold text-white">Choisis un utilisateur pour discuter</p>
                     <p className="mt-3 text-sm text-slate-400">Ta conversation apparaîtra ici avec un style moderne.</p>
@@ -209,14 +209,14 @@ export default function ChatPage() {
             </div>
 
             {selectedUser && (
-              <div className="border-t border-white/10 bg-slate-900/80 px-6 py-5">
+              <div className="border-t border-white/10 bg-blue-800/80 px-6 py-5">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                   <input
                     type="text"
                     placeholder="Tape ton message..."
                     value={text}
                     onChange={(e) => setText(e.target.value)}
-                    className="flex-1 rounded-3xl border border-white/10 bg-slate-950/80 px-5 py-4 text-slate-100 outline-none placeholder:text-slate-500 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-500/20"
+                    className="flex-1 rounded-3xl border border-white/20 bg-slate-600/60 px-5 py-4 text-white outline-none placeholder:text-slate-300 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-500/20"
                   />
                   <button
                     onClick={sendMessage}

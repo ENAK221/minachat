@@ -67,7 +67,7 @@ export default function Profile() {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.6 }}
-            className="w-32 h-32 rounded-full bg-white/30 backdrop-blur-xl border border-white/40 shadow-xl flex items-center justify-center text-2xl font-bold text-blue-700"
+            className="w-32 h-32 rounded-full bg-white/30 backdrop-blur-xl border border-white/40 shadow-xl flex items-center justify-center text-2xl font-bold text-sky-300"
           >
             {profile.username.charAt(0).toUpperCase()}
           </motion.div>
@@ -114,7 +114,7 @@ export default function Profile() {
                 className="w-full p-2 rounded"
               />
             </div>
-            <button className="self-end bg-blue-600 text-white px-4 py-2 rounded-lg">
+            <button className="self-end bg-sky-300 text-white px-4 py-2 rounded-lg hover:bg-sky-200 transition">
               Enregistrer
             </button>
           </motion.form>
@@ -129,7 +129,7 @@ export default function Profile() {
             <p className="opacity-90">{profile.bio || "Aucune description."}</p>
             <button
               onClick={() => setEditing(true)}
-              className="mt-4 bg-white text-blue-700 px-4 py-2 rounded-lg"
+              className="mt-4 bg-sky-300 text-white px-4 py-2 rounded-lg hover:bg-sky-200 transition"
             >Modifier</button>
           </motion.div>
         )}
