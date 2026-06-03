@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import { API_URL } from "../config";
 
 export default function GroupsPage() {
@@ -20,56 +21,91 @@ export default function GroupsPage() {
   }, [token]);
 
   return (
-    <div className="max-w-lg mx-auto mt-10 px-4">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Mes groupes</h1>
-        <Link
-          to="/groups/new"
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm font-medium"
+    <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(79,70,229,0.45),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(14,165,233,0.3),_transparent_30%),linear-gradient(180deg,_#0f172a_0%,_#020617_100%)]" />
+
+      <div className="relative z-10 mx-auto max-w-2xl px-4 py-10">
+
+        {/* En-tête */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-8 rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_30px_80px_rgba(15,23,42,0.35)] backdrop-blur-xl"
         >
-          + Nouveau groupe
-        </Link>
-      </div>
-
-      {loading && (
-        <p className="text-center text-gray-400">Chargement...</p>
-      )}
-
-      {!loading && groups.length === 0 && (
-        <div className="text-center mt-16 text-gray-400">
-          <p className="text-lg">Aucun groupe pour l'instant</p>
-          <Link
-            to="/groups/new"
-            className="inline-block mt-4 text-blue-600 hover:underline"
-          >
-            Créer mon premier groupe
-          </Link>
-        </div>
-      )}
-
-      <ul className="space-y-3">
-        {groups.map((group) => (
-          <li key={group.id}>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm uppercase tracking-[0.32em] text-cyan-300/80">MinaChat</p>
+              <h1 className="mt-2 text-4xl font-semibold tracking-tight text-white">Mes groupes</h1>
+              <p className="mt-1 text-slate-400">{groups.length} groupe{groups.length > 1 ? "s" : ""}</p>
+            </div>
             <Link
-              to={`/groups/${group.id}`}
-              className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition"
+              to="/groups/new"
+              className="rounded-3xl bg-cyan-400 px-6 py-3 font-semibold text-slate-950 transition hover:bg-cyan-300"
             >
-              {/* Icône du groupe */}
-              <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-lg">
-                {group.name.charAt(0).toUpperCase()}
-              </div>
-
-              <div>
-                <p className="font-semibold">{group.name}</p>
-                <p className="text-sm text-gray-400">
-                  Créé le{" "}
-                  {new Date(group.created_at).toLocaleDateString("fr-FR")}
-                </p>
-              </div>
+              + Nouveau
             </Link>
-          </li>
-        ))}
-      </ul>
+          </div>
+        </motion.div>
+
+        {/* Chargement */}
+        {loading && (
+          <div className="flex justify-center mt-20">
+            <div className="w-8 h-8 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+          </div>
+        )}
+
+        {/* Aucun groupe */}
+        {!loading && groups.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-3xl border border-dashed border-white/15 bg-slate-950/70 p-12 text-center text-slate-400"
+          >
+            <p className="text-lg font-semibold text-white">Aucun groupe pour l'instant</p>
+            <p className="mt-2 text-sm">Crée ton premier groupe et invite des membres</p>
+            <Link
+              to="/groups/new"
+              className="inline-block mt-6 rounded-3xl bg-cyan-400 px-6 py-3 font-semibold text-slate-950 transition hover:bg-cyan-300"
+            >
+              Créer un groupe
+            </Link>
+          </motion.div>
+        )}
+
+        {/* Liste des groupes */}
+        <div className="space-y-3">
+          {groups.map((group, i) => (
+            <motion.div
+              key={group.id}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.05 }}
+            >
+              <Link
+                to={`/groups/${group.id}`}
+                className="flex items-center gap-4 rounded-3xl border border-white/10 bg-slate-900/80 px-5 py-4 shadow-xl backdrop-blur-xl transition hover:border-cyan-400/40 hover:bg-cyan-400/10"
+              >
+                {/* Avatar */}
+                <div className="h-12 w-12 rounded-2xl bg-slate-800/90 ring-1 ring-white/10 flex items-center justify-center text-xl font-bold text-cyan-300">
+                  {group.name.charAt(0).toUpperCase()}
+                </div>
+
+                <div className="flex-1">
+                  <p className="font-semibold text-white">{group.name}</p>
+                  <p className="text-sm text-slate-400">
+                    Créé le {new Date(group.created_at).toLocaleDateString("fr-FR", {
+                      day: "numeric", month: "long", year: "numeric"
+                    })}
+                  </p>
+                </div>
+
+                <span className="text-slate-500 text-xl">›</span>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
