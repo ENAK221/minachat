@@ -12,6 +12,7 @@ const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
 const messageRoutes = require("./routes/messages");
 const adminRoutes = require("./routes/admin");
+const groupRoutes = require("./routes/groups");
 
 // Route de test
 app.get("/", (req, res) => {
@@ -23,6 +24,7 @@ app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/messages", messageRoutes);
 app.use("/admin", adminRoutes);
+app.use("/groups", groupRoutes);
 
 // Lancement du serveur
 app.listen(process.env.PORT || 5000, () => {

@@ -8,6 +8,9 @@ import Register from "./pages/Register.jsx";
 import Profile from "./pages/Profile.jsx";
 import ChatPage from "./pages/ChatPage.jsx";
 import AdminPage from "./pages/AdminPage.jsx";
+import CreateGroup from "./pages/CreateGroup.jsx";
+import GroupChat from "./pages/GroupChat.jsx";
+import GroupsPage from "./pages/GroupsPage.jsx";
 
 // Contexte + protections
 import { UserProvider } from "./context/UserContext.jsx";
@@ -52,6 +55,36 @@ export default function App() {
                 <AdminRoute>
                   <AdminPage />
                 </AdminRoute>
+              }
+            />
+
+            {/* Liste des groupes */}
+            <Route
+              path="/groups"
+              element={
+                <PrivateRoute>
+                  <GroupsPage />
+                </PrivateRoute>
+              }
+            />
+
+            {/* Créer un groupe */}
+            <Route
+              path="/groups/new"
+              element={
+                <PrivateRoute>
+                  <CreateGroup />
+                </PrivateRoute>
+              }
+            />
+
+            {/* Chat de groupe */}
+            <Route
+              path="/groups/:id"
+              element={
+                <PrivateRoute>
+                  <GroupChat />
+                </PrivateRoute>
               }
             />
 

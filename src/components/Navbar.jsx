@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { FaHome, FaUser, FaSignInAlt, FaComments, FaLock, FaSignOutAlt } from "react-icons/fa";
+import { FaHome, FaUser, FaSignInAlt, FaComments, FaLock, FaSignOutAlt, FaUsers } from "react-icons/fa";
 import { useUser } from "../context/UserContext.jsx";
 
 export default function Navbar() {
@@ -27,6 +27,12 @@ export default function Navbar() {
         {user && (
           <Link to="/chat" className="flex items-center gap-2 hover:text-blue-600 transition">
             <FaComments /> Chat
+          </Link>
+        )}
+
+        {user && (
+          <Link to="/groups" className="flex items-center gap-2 hover:text-blue-600 transition">
+            <FaUsers /> Groupes
           </Link>
         )}
 
