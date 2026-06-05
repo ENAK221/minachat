@@ -163,7 +163,7 @@ export default function AdminPage() {
             </div>
           )}
 
-          <div className="mt-8 rounded-[30px] border border-cyan-500/10 bg-blue-900/90 p-6 shadow-lg shadow-cyan-500/10">
+          <div className="mt-8 rounded-[30px] border border-cyan-500/10 bg-white/10 p-6 shadow-lg shadow-cyan-500/10">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h2 className="text-xl font-semibold text-white">Inscriptions en attente</h2>
@@ -278,7 +278,7 @@ export default function AdminPage() {
           </div>
         </div>
 
-        <div className="rounded-[34px] border border-white/10 bg-blue-900/80 p-8 shadow-2xl shadow-slate-950/40 backdrop-blur-xl">
+        <div className="rounded-[34px] border border-white/10 bg-white/10 p-8 shadow-2xl shadow-slate-950/40 backdrop-blur-xl">
           <div className="mb-6">
             <h2 className="text-2xl font-semibold text-white">Créer un nouvel utilisateur</h2>
             <p className="mt-2 text-slate-400">Ajoute un compte utilisateur directement depuis le panneau admin.</p>

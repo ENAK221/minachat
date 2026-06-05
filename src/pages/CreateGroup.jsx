@@ -101,7 +101,7 @@ export default function CreateGroup() {
                 </span>
               </label>
 
-              <div className="rounded-2xl border border-white/10 divide-y divide-white/10 max-h-64 overflow-y-auto bg-blue-900/60">
+              <div className="rounded-2xl border border-white/10 divide-y divide-white/10 max-h-64 overflow-y-auto bg-white/10">
                 {users.map((user) => {
                   const selected = selectedIds.includes(user.id);
                   return (

@@ -107,13 +107,13 @@ export default function GroupChat() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="flex flex-1 flex-col overflow-hidden rounded-3xl border border-white/10 bg-blue-900/80 backdrop-blur-xl shadow-xl"
+            className="flex flex-1 flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/10 backdrop-blur-xl shadow-xl"
           >
             {/* Messages */}
             <div className="flex-1 overflow-y-auto px-6 py-6 space-y-4">
               {messages.length === 0 && (
                 <div className="flex h-full items-center justify-center">
-                  <div className="rounded-3xl border border-dashed border-white/15 bg-blue-900/70 p-10 text-center text-slate-400">
+                  <div className="rounded-3xl border border-dashed border-white/15 bg-white/10 p-10 text-center text-slate-400">
                     <p className="text-lg font-semibold text-white">Aucun message pour l'instant</p>
                     <p className="mt-2 text-sm">Soyez le premier à écrire !</p>
                   </div>

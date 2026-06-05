@@ -60,7 +60,7 @@ export default function GroupsPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-3xl border border-dashed border-white/15 bg-blue-900/70 p-12 text-center text-slate-400"
+            className="rounded-3xl border border-dashed border-white/15 bg-white/10 p-12 text-center text-slate-400"
           >
             <p className="text-lg font-semibold text-white">Aucun groupe pour l'instant</p>
             <p className="mt-2 text-sm">Crée ton premier groupe et invite des membres</p>

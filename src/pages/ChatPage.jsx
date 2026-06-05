@@ -121,7 +121,7 @@ export default function ChatPage() {
 
             <div className="space-y-3">
               {users.length === 0 ? (
-                <div className="rounded-3xl border border-dashed border-white/15 bg-blue-900/70 p-6 text-slate-400">
+                <div className="rounded-3xl border border-dashed border-white/15 bg-white/10 p-6 text-slate-300">
                   Aucun utilisateur n'a encore été chargé.
                 </div>
               ) : (
@@ -132,7 +132,7 @@ export default function ChatPage() {
                     className={`w-full rounded-3xl border px-4 py-4 text-left transition-all duration-200 ${
                       selectedUser?.id === u.id
                         ? "border-cyan-400/40 bg-cyan-400/10 shadow-glow"
-                        : "border-white/10 bg-blue-900/70 hover:border-white/20 hover:bg-white/5"
+                        : "border-white/10 bg-white/10 hover:border-white/20 hover:bg-white/15"
                     }`}
                   >
                     <div className="flex items-center gap-4">
@@ -152,7 +152,7 @@ export default function ChatPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.15 }}
-            className="flex min-h-[calc(100vh-192px)] flex-col overflow-hidden rounded-3xl border border-white/10 bg-blue-900/80 shadow-xl shadow-slate-950/40 backdrop-blur-xl"
+            className="flex min-h-[calc(100vh-192px)] flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/10 shadow-xl shadow-slate-950/40 backdrop-blur-xl"
           >
             <div className="border-b border-white/10 px-6 py-5">
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -176,7 +176,7 @@ export default function ChatPage() {
               {selectedUser ? (
                 <div className="space-y-4">
                   {messages.length === 0 ? (
-                    <div className="rounded-3xl border border-dashed border-white/15 bg-blue-900/70 p-8 text-center text-slate-400">
+                    <div className="rounded-3xl border border-dashed border-white/15 bg-white/10 p-8 text-center text-slate-400">
                       Aucune conversation pour le moment. Envoie le premier message !
                     </div>
                   ) : (
@@ -199,7 +199,7 @@ export default function ChatPage() {
                   )}
                 </div>
               ) : (
-                <div className="flex h-full items-center justify-center rounded-3xl border border-dashed border-white/10 bg-blue-900/70 p-10 text-center text-slate-400">
+                <div className="flex h-full items-center justify-center rounded-3xl border border-dashed border-white/10 bg-white/10 p-10 text-center text-slate-400">
                   <div>
                     <p className="text-lg font-semibold text-white">Choisis un utilisateur pour discuter</p>
                     <p className="mt-3 text-sm text-slate-400">Ta conversation apparaîtra ici avec un style moderne.</p>
