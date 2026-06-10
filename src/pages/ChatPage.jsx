@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useUser } from "../context/UserContext";
 import { motion } from "framer-motion";
+import { API_URL } from "../config";
 
 export default function ChatPage() {
   const { user } = useUser();
@@ -10,79 +11,82 @@ export default function ChatPage() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
+  const bottomRef = useRef(null);
 
-  useEffect(() => {
+  const fetchUsers = () => {
     if (!token) return;
-
-    fetch("http://localhost:5000/users", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    fetch(`${API_URL}/users`, {
+      headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) setUsers(data);
-        else console.error("Réponse inattendue :", data);
-      })
+      .then((data) => { if (Array.isArray(data)) setUsers(data); })
       .catch((err) => console.error("Erreur users :", err));
+  };
+
+  // Chargement initial + rafraîchissement toutes les 30s pour le statut en ligne
+  useEffect(() => {
+    fetchUsers();
+    const interval = setInterval(fetchUsers, 30000);
+    return () => clearInterval(interval);
   }, [token]);
 
+  // Heartbeat toutes les 30s pour signaler que l'utilisateur est actif
+  useEffect(() => {
+    if (!token) return;
+    const sendHeartbeat = () =>
+      fetch(`${API_URL}/users/heartbeat`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      }).catch(() => {});
+    sendHeartbeat();
+    const interval = setInterval(sendHeartbeat, 30000);
+    return () => clearInterval(interval);
+  }, [token]);
+
+  // Chargement des messages + polling toutes les 2s
   useEffect(() => {
     if (!selectedUser || !token) return;
 
-    fetch(
-      `http://localhost:5000/messages/conversation/${user.id}/${selectedUser.id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => setMessages(data))
-      .catch((err) => console.error("Erreur messages :", err));
+    const load = () =>
+      fetch(`${API_URL}/messages/conversation/${user.id}/${selectedUser.id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => res.json())
+        .then((data) => { if (Array.isArray(data)) setMessages(data); })
+        .catch((err) => console.error("Erreur messages :", err));
+
+    load();
+    const interval = setInterval(load, 2000);
+    return () => clearInterval(interval);
   }, [selectedUser, user.id, token]);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const sendMessage = async () => {
     if (!text.trim() || !selectedUser) return;
-
-    const response = await fetch("http://localhost:5000/messages", {
+    await fetch(`${API_URL}/messages`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        receiver_id: selectedUser.id,
-        content: text,
-      }),
+      body: JSON.stringify({ receiver_id: selectedUser.id, content: text }),
     });
-
-    if (!response.ok) {
-      console.error("Erreur envoi message :", response.statusText);
-      return;
-    }
-
     setText("");
-
-    fetch(
-      `http://localhost:5000/messages/conversation/${user.id}/${selectedUser.id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => setMessages(data))
-      .catch((err) => console.error("Erreur recharge messages :", err));
   };
+
+  const formatTime = (ts) =>
+    new Date(ts).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-blue-900 text-slate-100">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(79,70,229,0.45),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(14,165,233,0.3),_transparent_30%),linear-gradient(180deg,_#1e3a8a_0%,_#1e40af_100%)]" />
 
       <div className="relative z-10 mx-auto flex min-h-screen max-w-[1600px] flex-col px-4 py-8 sm:px-6 lg:px-8">
+
+        {/* En-tête */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -104,25 +108,23 @@ export default function ChatPage() {
         </motion.div>
 
         <div className="grid flex-1 gap-6 lg:grid-cols-[320px_1fr]">
+
+          {/* Sidebar contacts */}
           <motion.aside
             initial={{ x: -30, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.1 }}
             className="rounded-3xl border border-white/10 bg-blue-800/80 p-5 shadow-xl shadow-slate-950/40 backdrop-blur-xl"
           >
-            <div className="mb-6 flex items-center justify-between">
-              <div>
-                <p className="text-sm uppercase tracking-[0.3em] text-cyan-300/80">
-                  Contacts
-                </p>
-                <h2 className="mt-3 text-2xl font-bold text-white">Choisis un destinataire</h2>
-              </div>
+            <div className="mb-6">
+              <p className="text-sm uppercase tracking-[0.3em] text-cyan-300/80">Contacts</p>
+              <h2 className="mt-3 text-2xl font-bold text-white">Choisis un destinataire</h2>
             </div>
 
             <div className="space-y-3">
               {users.length === 0 ? (
                 <div className="rounded-3xl border border-dashed border-white/15 bg-white/10 p-6 text-slate-300">
-                  Aucun utilisateur n'a encore été chargé.
+                  Aucun utilisateur chargé.
                 </div>
               ) : (
                 users.map((u) => (
@@ -131,15 +133,32 @@ export default function ChatPage() {
                     onClick={() => setSelectedUser(u)}
                     className={`w-full rounded-3xl border px-4 py-4 text-left transition-all duration-200 ${
                       selectedUser?.id === u.id
-                        ? "border-cyan-400/40 bg-cyan-400/10 shadow-glow"
+                        ? "border-cyan-400/40 bg-cyan-400/10"
                         : "border-white/10 bg-white/10 hover:border-white/20 hover:bg-white/15"
                     }`}
                   >
                     <div className="flex items-center gap-4">
-                      <div className="h-12 w-12 rounded-2xl bg-slate-800/90 ring-1 ring-white/10" />
+                      {/* Avatar + indicateur en ligne */}
+                      <div className="relative shrink-0">
+                        <img
+                          src={
+                            u.avatar_url ||
+                            `https://ui-avatars.com/api/?name=${encodeURIComponent(u.username)}&background=1e293b&color=67e8f9`
+                          }
+                          alt={u.username}
+                          className="h-12 w-12 rounded-2xl object-cover ring-1 ring-white/10"
+                        />
+                        <span
+                          className={`absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full ring-2 ring-blue-800 ${
+                            u.is_online ? "bg-green-400" : "bg-slate-500"
+                          }`}
+                        />
+                      </div>
                       <div>
                         <p className="text-lg font-semibold text-white">{u.username}</p>
-                        <p className="text-sm text-slate-400">{u.email}</p>
+                        <p className={`text-sm ${u.is_online ? "text-green-400" : "text-slate-400"}`}>
+                          {u.is_online ? "En ligne" : "Hors ligne"}
+                        </p>
                       </div>
                     </div>
                   </button>
@@ -148,30 +167,34 @@ export default function ChatPage() {
             </div>
           </motion.aside>
 
+          {/* Zone de conversation */}
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.15 }}
             className="flex min-h-[calc(100vh-192px)] flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/10 shadow-xl shadow-slate-950/40 backdrop-blur-xl"
           >
+            {/* Header conversation */}
             <div className="border-b border-white/10 px-6 py-5">
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <p className="text-sm uppercase tracking-[0.3em] text-cyan-300/80">
-                    Conversation
-                  </p>
+                  <p className="text-sm uppercase tracking-[0.3em] text-cyan-300/80">Conversation</p>
                   <h2 className="text-3xl font-semibold text-white">
                     {selectedUser ? selectedUser.username : "Sélectionne un contact"}
                   </h2>
                 </div>
                 {selectedUser && (
-                  <div className="rounded-3xl bg-blue-800/80 px-4 py-3 text-sm text-slate-300">
-                    En discussion avec {selectedUser.username}
+                  <div className="flex items-center gap-2 rounded-3xl bg-blue-800/80 px-4 py-3 text-sm">
+                    <span className={`h-2.5 w-2.5 rounded-full ${selectedUser.is_online ? "bg-green-400" : "bg-slate-500"}`} />
+                    <span className="text-slate-300">
+                      {selectedUser.is_online ? "En ligne" : "Hors ligne"}
+                    </span>
                   </div>
                 )}
               </div>
             </div>
 
+            {/* Messages */}
             <div className="flex-1 overflow-y-auto px-6 py-6">
               {selectedUser ? (
                 <div className="space-y-4">
@@ -188,18 +211,29 @@ export default function ChatPage() {
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.2, delay: index * 0.03 }}
-                          className={`max-w-[75%] ${
-                            isMine ? "ml-auto rounded-[32px] bg-cyan-500/90 text-slate-950" : "rounded-[32px] bg-slate-800/90 text-slate-100"
-                          } p-5 shadow-[0_20px_40px_rgba(15,23,42,0.25)]`}
+                          className={`flex flex-col ${isMine ? "items-end" : "items-start"}`}
                         >
-                          <p className="whitespace-pre-line text-base leading-7">{msg.content}</p>
+                          <div
+                            className={`max-w-[75%] rounded-[32px] p-5 shadow-[0_20px_40px_rgba(15,23,42,0.25)] ${
+                              isMine
+                                ? "bg-cyan-500/90 text-slate-950 rounded-br-none"
+                                : "bg-slate-800/90 text-slate-100 rounded-bl-none"
+                            }`}
+                          >
+                            <p className="whitespace-pre-line text-base leading-7">{msg.content}</p>
+                          </div>
+                          {/* Horodatage */}
+                          <span className="mt-1 mx-2 text-xs text-slate-500">
+                            {formatTime(msg.created_at)}
+                          </span>
                         </motion.div>
                       );
                     })
                   )}
+                  <div ref={bottomRef} />
                 </div>
               ) : (
-                <div className="flex h-full items-center justify-center rounded-3xl border border-dashed border-white/10 bg-white/10 p-10 text-center text-slate-400">
+                <div className="flex h-full items-center justify-center rounded-3xl border border-dashed border-white/10 bg-white/10 p-10 text-center">
                   <div>
                     <p className="text-lg font-semibold text-white">Choisis un utilisateur pour discuter</p>
                     <p className="mt-3 text-sm text-slate-400">Ta conversation apparaîtra ici avec un style moderne.</p>
@@ -208,6 +242,7 @@ export default function ChatPage() {
               )}
             </div>
 
+            {/* Zone de saisie */}
             {selectedUser && (
               <div className="border-t border-white/10 bg-blue-800/80 px-6 py-5">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -216,11 +251,18 @@ export default function ChatPage() {
                     placeholder="Tape ton message..."
                     value={text}
                     onChange={(e) => setText(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        sendMessage();
+                      }
+                    }}
                     className="flex-1 rounded-3xl border border-white/20 bg-slate-600/60 px-5 py-4 text-white outline-none placeholder:text-slate-300 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-500/20"
                   />
                   <button
                     onClick={sendMessage}
-                    className="inline-flex items-center justify-center rounded-3xl bg-cyan-400 px-6 py-4 font-semibold text-slate-950 transition hover:bg-cyan-300"
+                    disabled={!text.trim()}
+                    className="inline-flex items-center justify-center rounded-3xl bg-cyan-400 px-6 py-4 font-semibold text-slate-950 transition hover:bg-cyan-300 disabled:opacity-40"
                   >
                     Envoyer
                   </button>

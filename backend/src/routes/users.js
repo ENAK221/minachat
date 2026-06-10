@@ -3,14 +3,27 @@ const router = express.Router();
 const db = require("../db");
 const auth = require("../middleware/authMiddleware");
 
+const onlineUsers = new Map();
+const ONLINE_MS = 2 * 60 * 1000;
 
-// Récupérer tous les utilisateurs (pour le chat) – route protégée
+// Heartbeat — le frontend appelle cette route toutes les 30s
+router.post("/heartbeat", auth, (req, res) => {
+  onlineUsers.set(req.user.id, Date.now());
+  res.json({ ok: true });
+});
+
+// Récupérer tous les utilisateurs avec statut en ligne
 router.get("/", auth, async (req, res) => {
   try {
     const result = await db.query(
       "SELECT id, username, email, avatar_url FROM users ORDER BY username ASC"
     );
-    res.json(result.rows);
+    const now = Date.now();
+    const rows = result.rows.map((u) => ({
+      ...u,
+      is_online: onlineUsers.has(u.id) && now - onlineUsers.get(u.id) < ONLINE_MS,
+    }));
+    res.json(rows);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Erreur serveur" });
