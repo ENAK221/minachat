@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import { motion } from "framer-motion";
+import { API_URL } from "../config";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -14,7 +15,7 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:5000/auth/login", {
+      const res = await axios.post(`${API_URL}/auth/login`, {
         email,
         password,
       });
@@ -79,7 +80,7 @@ export default function Login() {
             <label className="text-white/80 text-sm">Email</label>
             <input
               type="email"
-              placeholder="exemple@gmail.com"
+              placeholder="SAISISSEZ VOTRE EMAIL"
               className="p-3 rounded-xl bg-white/10 text-white placeholder-white/40 outline-none border border-white/20 focus:border-white/40 transition"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -90,7 +91,7 @@ export default function Login() {
             <label className="text-white/80 text-sm">Mot de passe</label>
             <input
               type="password"
-              placeholder="••••••••"
+              placeholder="SAISISSEZ VOTRE MOT DE PASSE"
               className="p-3 rounded-xl bg-white/10 text-white placeholder-white/40 outline-none border border-white/20 focus:border-white/40 transition"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

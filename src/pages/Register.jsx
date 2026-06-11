@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
+import { API_URL } from "../config";
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -11,7 +12,7 @@ export default function Register() {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:5000/auth/register", {
+      const res = await axios.post(`${API_URL}/auth/register`, {
         username,
         email,
         password,
